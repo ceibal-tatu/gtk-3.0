@@ -1,0 +1,26 @@
+From 438e1ea08b8e55b1323acbf498c0418524a5d6f1 Mon Sep 17 00:00:00 2001
+From: Federico Mena Quintero <federico@gnome.org>
+Date: Mon, 07 May 2012 20:42:32 +0000
+Subject: bgo#675421 - Set the wm_role on GtkFileChooserDialog
+
+The window's role is 'GtkFileChooserDialog', so that window managers can match it
+for positioning.
+
+Signed-off-by: Federico Mena Quintero <federico@gnome.org>
+---
+diff --git a/gtk/gtkfilechooserdialog.c b/gtk/gtkfilechooserdialog.c
+index 1b62486..c120b9c 100644
+--- a/gtk/gtkfilechooserdialog.c
++++ b/gtk/gtkfilechooserdialog.c
+@@ -257,6 +257,8 @@ gtk_file_chooser_dialog_init (GtkFileChooserDialog *dialog)
+   gtk_box_set_spacing (GTK_BOX (content_area), 2); /* 2 * 5 + 2 = 12 */
+   gtk_container_set_border_width (GTK_CONTAINER (action_area), 5);
+ 
++  gtk_window_set_role (GTK_WINDOW (dialog), "GtkFileChooserDialog");
++
+   /* We do a signal connection here rather than overriding the method in
+    * class_init because GtkDialog::response is a RUN_LAST signal.  We want *our*
+    * handler to be run *first*, regardless of whether the user installs response
+--
+cgit v0.9.0.2
+

@@ -1,0 +1,50 @@
+From e83ec9359c24d3c9d4601c391c032846705eae52 Mon Sep 17 00:00:00 2001
+From: Juan Pablo Ugarte <juanpablougarte@gmail.com>
+Date: Fri, 18 May 2012 19:05:16 +0000
+Subject: Chain up custom_tag_start() propertly.
+
+Fixes bug #675899 "Infobar not loadable by GTKBuilder (using python gi introspection)"
+---
+diff --git a/gtk/gtkinfobar.c b/gtk/gtkinfobar.c
+index f69e427..aa62fb7 100644
+--- a/gtk/gtkinfobar.c
++++ b/gtk/gtkinfobar.c
+@@ -969,10 +969,11 @@ gtk_info_bar_buildable_custom_tag_start (GtkBuildable  *buildable,
+ {
+   ActionWidgetsSubParserData *parser_data;
+ 
+-  if (child)
+-    return FALSE;
++  if (parent_buildable_iface->custom_tag_start (buildable, builder, child,
++                                                tagname, parser, data))
++    return TRUE;
+ 
+-  if (strcmp (tagname, "action-widgets") == 0)
++  if (!child && strcmp (tagname, "action-widgets") == 0)
+     {
+       parser_data = g_slice_new0 (ActionWidgetsSubParserData);
+       parser_data->info_bar = GTK_INFO_BAR (buildable);
+@@ -983,8 +984,7 @@ gtk_info_bar_buildable_custom_tag_start (GtkBuildable  *buildable,
+       return TRUE;
+     }
+ 
+-  return parent_buildable_iface->custom_tag_start (buildable, builder, child,
+-                                                   tagname, parser, data);
++  return FALSE;
+ }
+ 
+ static void
+diff --git a/gtk/tests/builder.c b/gtk/tests/builder.c
+index 8013051..9e5beb0 100644
+--- a/gtk/tests/builder.c
++++ b/gtk/tests/builder.c
+@@ -2527,6 +2527,9 @@ test_message_area (void)
+     "            <property name=\"label\" translatable=\"yes\">Message</property>"
+     "          </object>"
+     "        </child>"
++    "        <packing>"
++    "          <property name='expand'>False</property>"
++    "        </packing>"
+     "      </object>"
+     "    </child>"
+     "    <child internal-child=\"action_area\">"

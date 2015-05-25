@@ -1,0 +1,38 @@
+From a3314b5c40300956b660843188711b421a0cd470 Mon Sep 17 00:00:00 2001
+From: Edward Sheldrake <ejsheldrake@gmail.com>
+Date: Mon, 14 May 2012 12:06:43 +0000
+Subject: GDK X11 DND: Fix infinite loop
+
+Related: https://bugzilla.gnome.org/show_bug.cgi?id=664646
+---
+diff --git a/gdk/x11/gdkdnd-x11.c b/gdk/x11/gdkdnd-x11.c
+index 3b6765e..6491f78 100644
+--- a/gdk/x11/gdkdnd-x11.c
++++ b/gdk/x11/gdkdnd-x11.c
+@@ -240,12 +240,12 @@ gdk_drag_context_find (GdkDisplay *display,
+                        Window      source_xid,
+                        Window      dest_xid)
+ {
+-  GList *tmp_list = contexts;
++  GList *tmp_list;
+   GdkDragContext *context;
+   GdkX11DragContext *context_x11;
+   Window context_dest_xid;
+ 
+-  while (tmp_list)
++  for (tmp_list = contexts; tmp_list; tmp_list = tmp_list->next)
+     {
+       context = (GdkDragContext *)tmp_list->data;
+       context_x11 = (GdkX11DragContext *)context;
+@@ -265,8 +265,6 @@ gdk_drag_context_find (GdkDisplay *display,
+             (GDK_WINDOW_XID (context->source_window) == source_xid))) &&
+           ((dest_xid == None) || (context_dest_xid == dest_xid)))
+         return context;
+-
+-      tmp_list = tmp_list->next;
+     }
+ 
+   return NULL;
+--
+cgit v0.9.0.2
+

@@ -1,0 +1,11 @@
+--- a/gtk/gtkwidget.h	2012-03-18 17:58:26.000000000 -0300
++++ b/gtk/gtkwidget.h	2015-05-12 00:04:26.588191799 -0300
+@@ -78,7 +78,7 @@
+ /**
+  * GtkCallback:
+  * @widget: the widget to operate on
+- * @data: user-supplied data
++ * @data: (closure): user-supplied data
+  *
+  * The type of the callback functions used for e.g. iterating over
+  * the children of a container, see gtk_container_foreach().

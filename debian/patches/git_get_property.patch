@@ -1,0 +1,25 @@
+From 93264446bbae8bec3dee826fa39ad5b9c13dcdf9 Mon Sep 17 00:00:00 2001
+From: Pavel Holejsovsky <pholejs@src.gnome.org>
+Date: Tue, 19 Jun 2012 12:35:57 +0000
+Subject: GtkImage: fix get_property('stock')
+
+The code was trying to get icon's name instead of icon's stock-id.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=678407
+---
+diff --git a/gtk/gtkimage.c b/gtk/gtkimage.c
+index 14f3efc..6cc1363 100644
+--- a/gtk/gtkimage.c
++++ b/gtk/gtkimage.c
+@@ -445,7 +445,7 @@ gtk_image_get_property (GObject     *object,
+       g_value_set_string (value, priv->filename);
+       break;
+     case PROP_STOCK:
+-      g_value_set_string (value, _gtk_icon_helper_get_icon_name (priv->icon_helper));
++      g_value_set_string (value, _gtk_icon_helper_get_stock_id (priv->icon_helper));
+       break;
+     case PROP_ICON_SET:
+       g_value_set_boxed (value, _gtk_icon_helper_peek_icon_set (priv->icon_helper));
+--
+cgit v0.9.0.2
+

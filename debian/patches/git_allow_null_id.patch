@@ -1,0 +1,21 @@
+From 580a83b1ab2206e7352a51b9f142386e1c0a3b1c Mon Sep 17 00:00:00 2001
+From: Christian Persch <chpe@gnome.org>
+Date: Tue, 12 Jun 2012 14:13:06 +0000
+Subject: application: Really allow NULL application-id
+
+While the docs were adjusted to claim that NULL application-id is allowed,
+the code actually segfaulted on it.
+(cherry picked from commit 69d6e7110094fed2cc8770683ac57a61f84949ff)
+---
+diff --git a/gtk/gtkapplication.c b/gtk/gtkapplication.c
+index 5d585f7..76c852c 100644
+--- a/gtk/gtkapplication.c
++++ b/gtk/gtkapplication.c
+@@ -811,7 +811,7 @@ GtkApplication *
+ gtk_application_new (const gchar       *application_id,
+                      GApplicationFlags  flags)
+ {
+-  g_return_val_if_fail (g_application_id_is_valid (application_id), NULL);
++  g_return_val_if_fail (application_id == NULL || g_application_id_is_valid (application_id), NULL);
+ 
+   g_type_init ();

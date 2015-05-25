@@ -1,0 +1,25 @@
+commit 3923ba160594ad5e6c83f861cd5aeaba5e58129c
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Aug 13 17:33:55 2013 -0400
+
+    Avoid overlong file chooser buttons
+    
+    When bookmarks are long, the file chooser button would
+    grow too much. This can be avoided by ellipsizing.
+    
+    Patch by Ritesh Khadgaray,
+    https://bugzilla.gnome.org/show_bug.cgi?id=672220
+
+diff --git a/gtk/gtkfilechooserbutton.c b/gtk/gtkfilechooserbutton.c
+index 81551f7..3cd560f 100644
+--- a/gtk/gtkfilechooserbutton.c
++++ b/gtk/gtkfilechooserbutton.c
+@@ -2328,6 +2328,8 @@ name_cell_data_func (GtkCellLayout   *layout,
+ 
+   if (type == ROW_TYPE_CURRENT_FOLDER)
+     g_object_set (cell, "ellipsize", PANGO_ELLIPSIZE_END, NULL);
++  else if (type == ROW_TYPE_BOOKMARK || type == ROW_TYPE_SHORTCUT)
++    g_object_set (cell, "ellipsize", PANGO_ELLIPSIZE_MIDDLE, NULL);
+   else
+     g_object_set (cell, "ellipsize", PANGO_ELLIPSIZE_NONE, NULL);
+ }

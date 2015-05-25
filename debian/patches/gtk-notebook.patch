@@ -1,0 +1,30 @@
+From 3056324570dc5f0e94a9da0958e4980199200ab6 Mon Sep 17 00:00:00 2001
+From: Matthias Clasen <mclasen@redhat.com>
+Date: Sat, 23 Jun 2012 16:20:54 +0000
+Subject: GtkNotebook: Fix reverse tab order
+
+When using Shift-Tab to move the focus out of page content onto
+the tab label, we end up in a situation where both Tab and Shift-Tab
+move focus back into the page, which is not really what is expected
+when the notebook is part of a dialog.
+
+Instead, arrange things so that using Shift-Tab with focus on a
+tab label moves the focus out of the notebook.
+
+http://bugzilla.gnome.org/show_bug.cgi?id=669986
+---
+diff --git a/gtk/gtknotebook.c b/gtk/gtknotebook.c
+index 214af56..cf077c8 100644
+--- a/gtk/gtknotebook.c
++++ b/gtk/gtknotebook.c
+@@ -4149,7 +4149,7 @@ focus_tabs_in (GtkNotebook *notebook)
+   if (priv->show_tabs && priv->cur_page)
+     {
+       gtk_widget_grab_focus (GTK_WIDGET (notebook));
+-
++      gtk_notebook_set_focus_child (notebook, NULL);
+       gtk_notebook_switch_focus_tab (notebook,
+                                      g_list_find (priv->children,
+                                                   priv->cur_page));
+--
+cgit v0.9.0.2

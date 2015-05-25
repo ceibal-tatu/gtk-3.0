@@ -1,0 +1,25 @@
+From e5246cabb624671ad205986ad4bbedf4033c8a0f Mon Sep 17 00:00:00 2001
+From: Marc-André Lureau <marcandre.lureau@redhat.com>
+Date: Thu, 03 May 2012 16:15:48 +0000
+Subject: gdk: do not send leave event on touchpad button release
+
+This is along the changes introduced in
+bd55519f7e6bb5da2fdf6f5e99bd79213059f81b,
+A TOUCHPAD device behaves like a mouse"
+
+https://bugzilla.gnome.org/show_bug.cgi?id=674549
+---
+diff --git a/gdk/gdkdisplay.c b/gdk/gdkdisplay.c
+index f12cd97..60bbb44 100644
+--- a/gdk/gdkdisplay.c
++++ b/gdk/gdkdisplay.c
+@@ -970,8 +970,7 @@ switch_to_pointer_grab (GdkDisplay        *display,
+            * synthesized when needed.
+            */
+           if (source_device &&
+-              (gdk_device_get_source (source_device) == GDK_SOURCE_TOUCHSCREEN ||
+-               gdk_device_get_source (source_device) == GDK_SOURCE_TOUCHPAD))
++              (gdk_device_get_source (source_device) == GDK_SOURCE_TOUCHSCREEN))
+             info->need_touch_press_enter = TRUE;
+ 
+           pointer_window = NULL;
