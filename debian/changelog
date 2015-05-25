@@ -1,3 +1,9 @@
+gtk+3.0 (3.4.2-0ubuntu0.9-tatu2) tatu; urgency=medium
+
+  * Fixed dependencies. 
+
+ -- Plan Ceibal <ceibal@plan.ceibal.edu.uy>  Mon, 25 May 2015 11:19:39 -0300
+
 gtk+3.0 (3.4.2-0ubuntu0.9-tatu1) tatu; urgency=medium
 
   * Added gtk widget patch.
